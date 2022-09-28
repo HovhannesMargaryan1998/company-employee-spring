@@ -2,18 +2,20 @@ package com.example.companyemployeespring.controller;
 
 import com.example.companyemployeespring.entity.Company;
 import com.example.companyemployeespring.entity.Employee;
+import com.example.companyemployeespring.repository.CompanyRepository;
+import com.example.companyemployeespring.repository.EmployeeRepository;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
-import com.example.companyemployeespring.repository.CompanyRepository;
-import com.example.companyemployeespring.repository.EmployeeRepository;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.annotation.MultipartConfig;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 @Controller
@@ -36,7 +38,9 @@ public class EmployeeController {
             file.transferTo(file1);
             employee.setProfilePic(fileName);
         }
-        employeeRepository.save(employee);
+
+         employeeRepository.save(employee);
+
         return "redirect:/employees";
     }
 
@@ -54,8 +58,8 @@ public class EmployeeController {
         return "addEmployee";
     }
 
-    @GetMapping("/employees/getImage")
-    public @ResponseBody byte[] getImage(@RequestParam("fileName") String fileName) throws IOException {
+    @GetMapping("/employeeGetImage")
+    public @ResponseBody byte[] getImage(@RequestParam("picName") String fileName) throws IOException {
         InputStream inputStream = new FileInputStream(folderPath + File.separator + fileName);
         return IOUtils.toByteArray(inputStream);
     }
