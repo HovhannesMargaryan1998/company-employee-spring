@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import com.example.companyemployeespring.repository.CompanyRepository;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 @Controller
@@ -32,5 +33,11 @@ public class CompanyController {
     public String addCompany(@ModelAttribute Company company) {
         companyRepository.save(company);
         return "redirect:/companies";
+    }
+    @GetMapping("/companies/delete")
+    public String delete(@RequestParam("id")int id){
+        companyRepository.deleteById(id);
+        return "redirect:/companies";
+
     }
 }

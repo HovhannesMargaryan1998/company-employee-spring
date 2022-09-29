@@ -17,6 +17,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class EmployeeController {
@@ -39,7 +40,14 @@ public class EmployeeController {
             employee.setProfilePic(fileName);
         }
 
-         employeeRepository.save(employee);
+        Employee save = employeeRepository.save(employee);
+        Optional<Company> companyId = companyRepository.findById(save.getCompany().getId());
+
+        Company company = companyId.get();
+        company.setEmployeesSize(+1);
+        companyRepository.save(company);
+
+
 
         return "redirect:/employees";
     }
