@@ -5,7 +5,12 @@
     <title>Show All Companies </title>
 </head>
 <body>
-<a href="/company/add">Add new company</a>|
+<div th:if="${currentUser!=null}">
+    Welcome,<span th:text="${currentUser.name}"></span>
+    <a href="/logout">Logout</a>
+
+</div>
+<a href="/companies/add">Add new company</a>|
 <table border="1px">
     <tr>
         <th>id</th>

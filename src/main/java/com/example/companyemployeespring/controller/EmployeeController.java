@@ -10,65 +10,48 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 public class EmployeeController {
-    @Autowired
-    private CompanyRepository companyRepository;
+
     @Autowired
     private EmployeeRepository employeeRepository;
+    @Autowired
+    private CompanyRepository companyRepository;
 
     @Value("${company.employee.images.folder}")
-    private String folderPath;
+    private String imagePath;
 
+    @GetMapping("/employees/add")
+    public String addEmployeePage(ModelMap modelMap) {
+        List<Company> companies = companyRepository.findAll();
+        modelMap.addAttribute("companies", companies);
+        return "addEmployee";
+    }
 
     @PostMapping("/employees/add")
-    public String addEmployee(@ModelAttribute Employee employee,
-                              @RequestParam("employeeImage") MultipartFile file) throws IOException {
-        if (!file.isEmpty() && file.getSize() > 0) {
-            String fileName = System.currentTimeMillis() + "-" + file.getOriginalFilename();
-            File file1 = new File(folderPath + File.separator + fileName);
-            file.transferTo(file1);
-            employee.setProfilePic(fileName);
-        }
-
-        Employee save = employeeRepository.save(employee);
-        Optional<Company> companyId = companyRepository.findById(save.getCompany().getId());
-
-        Company company = companyId.get();
-        company.setEmployeesSize(+1);
-        companyRepository.save(company);
-
-
-
+    public String addEmployee(@ModelAttribute Employee employee) {
+        employeeRepository.save(employee);
         return "redirect:/employees";
     }
 
     @GetMapping("/employees")
-    public String employeesPage(ModelMap modelMap) {
-        List<Employee> employeeList = employeeRepository.findAll();
-        modelMap.addAttribute("employees", employeeList);
+    public String employeesPage(ModelMap map) {
+        map.addAttribute("employees", employeeRepository.findAll());
         return "employees";
     }
 
-    @GetMapping("/employees/add")
-    public String addEmployeePage(ModelMap modelMap) {
-        List<Company> companiesList = companyRepository.findAll();
-        modelMap.addAttribute("companies", companiesList);
-        return "addEmployee";
-    }
-
-    @GetMapping("/employeeGetImage")
-    public @ResponseBody byte[] getImage(@RequestParam("picName") String fileName) throws IOException {
-        InputStream inputStream = new FileInputStream(folderPath + File.separator + fileName);
+    @GetMapping("/getImage")
+    public @ResponseBody
+    byte[] getImage(@RequestParam("picName") String picName) throws IOException {
+        InputStream inputStream = new FileInputStream(imagePath + picName);
         return IOUtils.toByteArray(inputStream);
     }
+
+
 }

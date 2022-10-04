@@ -5,6 +5,11 @@
     <title>Show All Employees </title>
 </head>
 <body>
+<div th:if="${currentUser!=null}">
+    Welcome,<span th:text="${currentUser.name}"></span>
+    <a href="/logout">Logout</a>
+
+</div>
 <a href="/employees/add">Add new employee</a>|
 <table border="1px">
     <tr>
@@ -31,7 +36,7 @@
 
         <td>
 
-            <img th:if="${employee.profilePic!=null}" th:src="@{/employeeGetImage(picName=${employee.profilePic})}" width="50"
+            <img th:if="${employee.profilePic!=null}" th:src="@{/getImage(picName=${employee.profilePic})}" width="50"
                  height="50"/>
 
             <img th:if="${employee.profilePic==null}" src="/image/cover2.jpg" width="50" height="50"/>

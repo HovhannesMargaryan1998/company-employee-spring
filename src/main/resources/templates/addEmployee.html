@@ -13,7 +13,7 @@ Add employee
     <input type="text" name="phoneNumber" placeholder="Please input phone number"><br>
     <input type="number" name="salary" placeholder="Please input salary"><br>
     <input type="text" name="position" placeholder="Please input position"><br>
-    <input type="file" name="employeeImage">
+    <input type="file" name="picName">
     <select name="company.id">
         <option th:each="company:${companies}" th:text="${company.name}" th:value="${company.id}"></option>
     </select>
